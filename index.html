@@ -1,180 +1,212 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>The Questioners</title>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
-    <link rel="stylesheet" href="style.css">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<title>Courses app</title>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 </head>
-<body ng-app="blogApp">
+
+<body ng-app="courseApp">
+	<div ng-controller="CourseController as course">
+		<div class="topbar">
+			<div class="container">
+				<div class="row">
+					<div class="col-s-4">
+						<h1 ng-click="course.selectTab('course')" class="push-left">{{course.title}}</h1>
+					</div>
+					<div class="offset-s-4 col-s-4">
+						<nav role='navigation' class="push-right">
+							<ul>
+								<li>
+									<a href="#" ng-click="course.selectTab('course')">See All Posts</a>
+								</li> //
+								<li>
+									<a href="#" ng-click="course.selectTab('new')">Add New Post</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+
+
+		<div class="content">
+			<div class="container">
+				<div class="row">
+					<ul class="post-grid" ng-show="course.isSelected('course')">
+						<li ng-repeat="post in course.posts" class="col-s-4" ng-class="{ 'reset-s' : $index%3==0 }" ng-click="course.selectTab($index)">
+							<h3>{{post.title}}</h3>
+							<p>{{post.body[0] | limitTo:70}}...</p>
+							<p class="fa fa-comment push-left"> {{post.comments.length}}
+							</p>
+							<p class="fa fa-heart push-right"> {{post.likes}}
+							</p>
+						</li>
+					</ul>
+					<div class="post" ng-repeat="post in course.posts" ng-show="course.isSelected($index)">
+						<div>
+
+							<h2>{{post.title}}</h2>
+							<h1 ng-click="course.selectFlag('registered', post)" class="push-left">Enroll</h1>
+							<img src="{{post.image}}" ng-show="{{post.image}}" />
+							<cite>by {{post.author}} on {{post.createdOn | date}}</cite>
+							<div ng-show="course.isSelectedFlag('registered', post)">
+							<div class="post-body">
+								<p ng-repeat="paragraph in post.body">
+									{{paragraph}}
+								</p>
+							</div>
+
+							<div class="comments" ng-controller="CommentController as commentCtrl">
+								<button class="fa fa-heart" ng-click="post.likes = post.likes+1"> {{post.likes}}</button>
+								<h3>Comments</h3>
+								<ul>
+									<li ng-repeat="comment in post.comments">
+										"{{comment.body}}"
+										<cite>-
+											<b>{{comment.author}}</b>
+										</cite>
+									</li>
+								</ul>
+								<form name="commentForm" ng-submit="commentForm.$valid && commentCtrl.addComment(post)" novalidate>
+
+
+									<h4>Add Comment</h4>
+									<textarea ng-model="commentCtrl.comment.body" cols="30" rows="10" required></textarea>
+									<label for="">by:</label>
+									<input type="text" ng-model="commentCtrl.comment.author" required placeholder="Name" />
+
+									<input type="submit" value="Submit" />
+								</form>
+							</div>
+						</div>
+						</div>
+					</div>
+					<div class="post" ng-show="course.isSelected('new')">
+						<h2>Add New Post</h2>
+
+						<form name="postForm" ng-submit=" course.addPost()" novalidate>
+							<h4>Title</h4>
+							<input type="text" ng-model="course.post.title" />
+							<h4>Body</h4>
+							<textarea ng-model="course.post.body" ng-list="/\n/" rows="10"></textarea>
+							<label for="">Featured Image URL</label>
+							<input type="text" ng-model="course.post.image" placeholder="http://placekitten.com/g/2000/600" />
+							<label for="">by:</label>
+							<input type="text" ng-model="course.post.author" placeholder="Author Name" required/>
+
+							<input type="submit" value="Submit" />
+							</select>
+						</form>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+</body>
+
+<script>
+	/*
+  
+  Simple blog front end demo in order to learn AngularJS - You can add new posts, add comments, and like posts.
+  
+  */
+
+	/*
     
-    <div ng-controller="BlogController as blog">
-        <div class="topbar">
-          <div class="container">
-            <div class="row">
-              <div class="col-s-4">
-                <h1 ng-click="blog.selectTab('blog')" class="push-left">{{blog.title}}</h1>
-              </div>
-              <div class="offset-s-4 col-s-4">
-                <nav role='navigation' class="push-right">
-                  <ul>
-                    <li><a href="#" ng-click="blog.selectTab('blog')">See All Posts</a></li> //
-                    <li><a href="#" ng-click="blog.selectTab('new')">Add New Post</a></li>
-                  </ul>
-                </nav> 
-              </div>
-            </div>
-          </div>
-          
-          
-           
-        </div>
-       
-        
-        <div class="content">
-          <div class="container">
-            <div class="row">
-              <ul class="post-grid" ng-show="blog.isSelected('blog')">
-            <li ng-repeat="post in blog.posts" class="col-s-4" ng-class="{ 'reset-s' : $index%3==0 }" ng-click="blog.selectTab($index)" >
-              <h3>{{post.title}}</h3>
-              <p>{{post.body[0] | limitTo:70}}...</p>
-              <p class="fa fa-comment push-left"> {{post.comments.length}}
-              </p>
-              <p class="fa fa-heart push-right"> {{post.likes}}
-              </p>
-            </li>
-          </ul>
-          <div class="post" ng-repeat="post in blog.posts" ng-show="blog.isSelected($index)">
-            <div>
-              
-              <h2>{{post.title}}</h2>
-              <img src="{{post.image}}" ng-show="{{post.image}}"/>
-              <cite>by {{post.author}} on {{post.createdOn | date}}</cite>
-              <div class="post-body">
-               <p ng-repeat="paragraph in post.body">
-                 {{paragraph}}
-               </p> 
-              </div>
-              
-              <div class="comments" ng-controller="CommentController as commentCtrl">
-                <button class="fa fa-heart" ng-click="post.likes = post.likes+1"> {{post.likes}}</button>
-                <h3>Comments</h3>
-                <ul>
-                 <li ng-repeat="comment in post.comments">
-                   "{{comment.body}}"
-                   <cite>- <b>{{comment.author}}</b></cite>
-                 </li>
-                </ul>
-                <form name="commentForm" ng-submit="commentForm.$valid && commentCtrl.addComment(post)" novalidate>
-                
-                  
-                  <h4>Add Comment</h4>
-                    <textarea ng-model="commentCtrl.comment.body" cols="30" rows="10" required></textarea>
-                  <label for="">by:</label>
-                    <input type="text" ng-model="commentCtrl.comment.author" required placeholder="Name"/>
-                    
-                    <input type="submit" value="Submit" />
-                  </form>
-              </div>
-          </div>
-        </div>
-          <div class="post" ng-show="blog.isSelected('new')">
-            <h2>Add New Post</h2>
-            
-            <form name="postForm" ng-submit=" blog.addPost()" novalidate>
-                    <h4>Title</h4>
-                    <input type="text" ng-model="blog.post.title"/>
-                    <h4>Body</h4>
-                    <textarea ng-model="blog.post.body" ng-list="/\n/" rows="10"></textarea>
-                    <label for="">Featured Image URL</label>
-                    <input type="text" ng-model="blog.post.image" placeholder="http://placekitten.com/g/2000/600" />
-                    <label for="">by:</label>
-                    <input type="text" ng-model="blog.post.author" placeholder="Author Name" required/>
-                    
-                    <input type="submit" value="Submit" />
-                  </select></form>
-            
-              </div>
-              
-            </div>
-          </div>
-          
-      </div>
-    </div>
+	Simple blog front end demo in order to learn AngularJS - You can add new posts, add comments, and like posts.
     
-    
-  </body>
+	*/
 
-  <script>
-  /*
+	(function () {
+		var app = angular.module('courseApp', []);
 
-Simple blog front end demo in order to learn AngularJS - You can add new posts, add comments, and like posts.
+		app.controller('CourseController', 
+	['$scope', '$http', function ($scope, $http) {
 
-*/
+			var course = this;
+			course.title = "AngularJS Course App";
 
-/*
+			course.posts = {};
+			var user = {
+				name: "Jozef",
+				courses: []
+			};
+			$http({
+				method: 'get',
+				url: 'courses.json',
+				dataType: 'json',
+				contentType: "application/json",
+				mimeType: "application/json"
+			}).then(function (response) {
+				console.log(response, 'res');
+				course.posts = response.data;
+			}, function (error) {
+				console.log(error, 'can not get data.');
+			});
 
-Simple blog front end demo in order to learn AngularJS - You can add new posts, add comments, and like posts.
+			course.tab = 'course';
+			course.flag = 'unregistered';
 
-*/
+			course.selectFlag = function (setFlag, post) {
+				course.flag = setFlag;
+				user.courses.push(post);
+				//console.log(course.flag);
+			};
 
-(function(){
-    var app = angular.module('blogApp',[]);
-    
-    app.controller('BlogController', ['$http', function($http){
-      
-      var blog = this;
-      blog.title = "AngularJS Blog App";
-      
-      blog.posts = {};
+			course.isSelectedFlag = function (checkFlag, post) {
+				console.log(checkFlag + " " + post.title);
+				for (var i = 0; i < user.courses.length; i++) {
+					console.log(user.courses[i]);
+					if(user.courses[i] === post)
+						return 1;
+				}
+				return 0;
+			};
 
-   $http({
-    method: 'get', 
-    url: 'courses.json',
-    dataType: 'json',
-    contentType: "application/json",
-    mimeType: "application/json"
-}).then(function (response) {
-    console.log(response, 'res');
-    blog.posts=response.data;
-},function (error){
-    console.log(error, 'can not get data.');
-});
+			course.selectTab = function (setTab) {
+				course.tab = setTab;
+				console.log(course.tab)
+			};
 
-      blog.tab = 'blog';
-      
-      blog.selectTab = function(setTab){
-        blog.tab = setTab;
-        console.log(blog.tab)
-      };
-      
-      blog.isSelected = function(checkTab){
-        return blog.tab === checkTab;
-      };
-      
-      blog.post = {};
-      blog.addPost = function(){
-        blog.post.createdOn = Date.now();
-        blog.post.comments = [];
-        blog.post.likes = 0;
-        blog.posts.unshift(this.post);
-        blog.tab = 0;
-        blog.post ={};
-      };   
-      
-    }]);
-    
-    app.controller('CommentController', function(){
-      this.comment = {};
-      this.addComment = function(post){
-        this.comment.createdOn = Date.now();
-        post.comments.push(this.comment);
-        this.comment ={};
-      };
-    });
-   
-  })();
-  </script>
+			course.isSelected = function (checkTab) {
+				return course.tab === checkTab;
+			};
+
+			course.post = {};
+			course.addPost = function () {
+				course.post.createdOn = Date.now();
+				course.post.comments = [];
+				course.post.likes = 0;
+				course.posts.unshift(this.post);
+				course.tab = 0;
+				course.post = {};
+			};
+
+		}]);
+
+		app.controller('CommentController', function () {
+			this.comment = {};
+			this.addComment = function (post) {
+				this.comment.createdOn = Date.now();
+				post.comments.push(this.comment);
+				this.comment = {};
+			};
+		});
+
+	})();
+</script>
