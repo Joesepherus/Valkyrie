@@ -9,15 +9,21 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 
-<body ng-app="courseApp">
+<body ng-app="courseApp">	
 	<div ng-controller="CourseController as course">
 		<div class="topbar">
 			<div class="container">
 				<div class="row">
 					<div class="col-s-4">
 						<h1 ng-click="course.selectTab('course')" class="push-left">{{course.title}}</h1>
+						<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">login</button>
+						<button class="btn btn-danger" data-toggle="modal" data-target="#registerModal">register</button>
 					</div>
 					<div class="offset-s-4 col-s-4">
 						<nav role='navigation' class="push-right">
@@ -54,11 +60,13 @@
 					</ul>
 					<div class="post" ng-repeat="post in course.posts" ng-show="course.isSelected($index)">
 						<div>
-
+							<div>
 							<h2>{{post.title}}</h2>
-							<h1 ng-click="course.selectFlag('registered', post)" class="push-left">Enroll</h1>
-							<img src="{{post.image}}" ng-show="{{post.image}}" />
-							<cite>by {{post.author}} on {{post.createdOn | date}}</cite>
+							<p>by {{post.author}} on {{post.createdOn | date}}</p>
+							<button ng-click="course.selectFlag('registered', post)" type="button" class="btn btn-success">Enroll</button>
+						</div>
+						
+							<img class="postImg" src="{{post.image}}" ng-show="{{post.image}}" />
 							<div ng-show="course.isSelectedFlag('registered', post)">
 							<div class="post-body">
 								<p ng-repeat="paragraph in post.body">
@@ -78,14 +86,9 @@
 									</li>
 								</ul>
 								<form name="commentForm" ng-submit="commentForm.$valid && commentCtrl.addComment(post)" novalidate>
-
-
 									<h4>Add Comment</h4>
 									<textarea ng-model="commentCtrl.comment.body" cols="30" rows="10" required></textarea>
-									<label for="">by:</label>
-									<input type="text" ng-model="commentCtrl.comment.author" required placeholder="Name" />
-
-									<input type="submit" value="Submit" />
+									<button class="btn btn-primary submitButton" type="submit">submit</button>
 								</form>
 							</div>
 						</div>
@@ -94,17 +97,14 @@
 					<div class="post" ng-show="course.isSelected('new')">
 						<h2>Add New Post</h2>
 
-						<form name="postForm" ng-submit=" course.addPost()" novalidate>
+						<form name="postForm" ng-submit=" course.addPost()">
 							<h4>Title</h4>
-							<input type="text" ng-model="course.post.title" />
+							<input type="text" ng-model="course.post.title" required/>
 							<h4>Body</h4>
-							<textarea ng-model="course.post.body" ng-list="/\n/" rows="10"></textarea>
+							<textarea ng-model="course.post.body" ng-list="/\n/" rows="10" required></textarea>
 							<label for="">Featured Image URL</label>
 							<input type="text" ng-model="course.post.image" placeholder="http://placekitten.com/g/2000/600" />
-							<label for="">by:</label>
-							<input type="text" ng-model="course.post.author" placeholder="Author Name" required/>
-
-							<input type="submit" value="Submit" />
+							<button class="btn btn-primary submitButton" type="submit">submit</button>
 							</select>
 						</form>
 
@@ -114,8 +114,82 @@
 			</div>
 
 		</div>
-	</div>
+		<div ng-controller="UserController as user">
+				
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-body">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h2>Login</h2>
+					<div id="hiddenWrong"><p class="hiddenParagraphRed">Wrong username or password.</p></div>
+					<div id="hiddenLoggedIn"><p class="hiddenParagraphGreen">You have been successfuly logged in.</p></div>
+					
+					<form name="newYourPlaylistForm" id="newTaskForm" class="w3-container newYourPlaylistForm emailModalForm" ng-submit="commentCtrl.addComment(post)">
+						<p>
+							<input placeholder="Your username" class="w3-input mainLoginInput" name="newTaskTitle" id="inputTitle" type="text" ng-model="usernameReg"
+							 required>
+						</p>
+						<p>
+							<input type="password" placeholder="Your password" class="w3-input mainLoginInput" name="newTaskDescription" id="inputDescription"
+							 ng-model="passwordReg" required>
+						</p>
+						<button id="closeModal" ng-click="user.login(usernameReg, passwordReg)" class="w3-button w3-black w3-round-xxlarge wantMusic submitModalButton" type="submit">
+							Log in
+						</button>
+					</form>
+					</div>
+				</div>
+			</div>
+			</div>
 
+	<div class="modal fade" id="registerModal" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-body">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h2>Register</h2>
+						<div id="hiddenInUse"><p class="hiddenParagraphRed">That username is already in use.</p></div>
+						<div id="hiddenRegistered"><p class="hiddenParagraphGreen">You have been successfuly registered.</p></div>
+								
+						<form name="newYourPlaylistForm" id="newTaskForm" class="w3-container newYourPlaylistForm emailModalForm" ng-submit="commentCtrl.addComment(post)">
+							<p>
+								<input placeholder="Your username" class="w3-input mainLoginInput" name="newTaskTitle" id="inputTitle" type="text" ng-model="username"
+								 required>
+							</p>
+							<p>
+								<input type="password" placeholder="Your password" class="w3-input mainLoginInput" name="newTaskDescription" id="inputDescription"
+								 ng-model="password" required>
+							</p>
+							<button id="closeRegisterModal" ng-click="user.register(username, password)" class="w3-button w3-black w3-round-xxlarge wantMusic submitModalButton" type="submit">
+								Register
+							</button>
+						</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+
+	<div class="footer-bottom">
+	    <div class="container">
+                    <div  class="copyright pull-left">
+                    <p>&copy; 2017, Created by Jozef Maloch</p>
+                    </div>
+                    <div class="design pull-right">
+                        <div class="center-block">
+                            <a href="https://github.com/Joesepherus"><i id="social-gh" class="fa fa-github-square fa-3x social"></i></a>                            
+                            <a href="https://www.facebook.com/JoesMaloch"><i id="social-fb" class="fa fa-facebook-square fa-3x social"></i></a>
+                            <a href="https://twitter.com/TQs_Joesepherus"><i id="social-tw" class="fa fa-twitter-square fa-3x social"></i></a>
+                            <a href="https://plus.google.com/u/1/+Joesepherus"><i id="social-gp" class="fa fa-google-plus-square fa-3x social"></i></a>
+                            <a href="mailto:jozefmaloch@gmail.com"><i id="social-em" class="fa fa-envelope-square fa-3x social"></i></a>
+                        </div>
+                    </div>
+        </div>
+    </div>
 
 </body>
 
@@ -132,20 +206,21 @@
     
 	*/
 
+	/*$('#closeModal').click(function() {
+    	$('#myModal').modal('hide');
+	});*/
+
 	(function () {
 		var app = angular.module('courseApp', []);
 
 		app.controller('CourseController', 
-	['$scope', '$http', function ($scope, $http) {
-
+		['$scope', '$http', 'myservice', function ($scope, $http, myservice) {
+			$scope.myservice = myservice;
 			var course = this;
 			course.title = "AngularJS Course App";
 
 			course.posts = {};
-			var user = {
-				name: "Jozef",
-				courses: []
-			};
+
 			$http({
 				method: 'get',
 				url: 'courses.json',
@@ -163,16 +238,19 @@
 			course.flag = 'unregistered';
 
 			course.selectFlag = function (setFlag, post) {
+				if(myservice.loggedUser.name === "none"){
+					window.alert("You have to log in, to enroll in a course");
+					return 0;
+				}
 				course.flag = setFlag;
-				user.courses.push(post);
-				//console.log(course.flag);
+				myservice.loggedUser.courses.push(post);
 			};
 
 			course.isSelectedFlag = function (checkFlag, post) {
-				console.log(checkFlag + " " + post.title);
-				for (var i = 0; i < user.courses.length; i++) {
-					console.log(user.courses[i]);
-					if(user.courses[i] === post)
+				//console.log(checkFlag + " " + post.title);
+				for (var i = 0; i < myservice.loggedUser.courses.length; i++) {
+					console.log(myservice.loggedUser.courses[i]);
+					if(myservice.loggedUser.courses[i] === post)
 						return 1;
 				}
 				return 0;
@@ -181,6 +259,7 @@
 			course.selectTab = function (setTab) {
 				course.tab = setTab;
 				console.log(course.tab)
+			console.log("DICK " + myservice.loggedUser.name);
 			};
 
 			course.isSelected = function (checkTab) {
@@ -189,7 +268,12 @@
 
 			course.post = {};
 			course.addPost = function () {
+				if(myservice.loggedUser.name === "none"){
+					window.alert("You have to log in, to create a new course.");
+					return 0;
+				}
 				course.post.createdOn = Date.now();
+				course.post.author = myservice.loggedUser.name;
 				course.post.comments = [];
 				course.post.likes = 0;
 				course.posts.unshift(this.post);
@@ -199,14 +283,95 @@
 
 		}]);
 
-		app.controller('CommentController', function () {
+		app.controller('CommentController', 
+		['$scope', '$http', 'myservice', function ($scope, $http, myservice) {
 			this.comment = {};
 			this.addComment = function (post) {
 				this.comment.createdOn = Date.now();
+				this.comment.author = myservice.loggedUser.name;
 				post.comments.push(this.comment);
 				this.comment = {};
 			};
-		});
+		}]);
+
+		app.controller('UserController',
+		['$scope', '$http', 'myservice', function ($scope, $http, myservice) {
+			$scope.myservice = myservice;
+			var user = this;
+			
+			
+			var users = [{
+				name: "Jozef",
+				password: "ahoj50",
+				courses: []
+			},
+			{
+				name: "Tomas",
+				password: "kovacik",
+				courses: []
+			}];
+
+			user.test = function () {
+				console.log(users.length);
+				
+				for (var i = 0; i < users.length; i++) {
+					console.log(users[i].name, users[i].password);
+				}
+			};
+
+			user.login = function (username, password) {
+				var x = document.getElementById("hiddenWrong");
+				var y = document.getElementById("hiddenLoggedIn");
+				for (var i = 0; i < users.length; i++) {
+					console.log(users[i].name, users[i].password);
+					if(users[i].name === username && users[i].password === password){
+						myservice.loggedUser = users[i];
+						console.log("JUPIIII");
+						x.style.display = "none";
+						y.style.display = "block";
+						return 0;
+					}
+				}
+				y.style.display = "none";
+				x.style.display = "block";
+			};
+
+			user.register = function (username, password) {
+				var x = document.getElementById("hiddenInUse");
+				var y = document.getElementById("hiddenRegistered");
+				for (var i = 0; i < users.length; i++) {
+
+					if(users[i].name === username){
+							x.style.display = "block";
+							y.style.display = "none";
+							
+						//window.alert("That username is already in use");
+						return 0;
+					}
+					else {
+						x.style.display = "none";
+						y.style.display = "block";
+					}
+				}
+				var newUser = {
+					name,
+					password,
+					courses: []
+				};
+				newUser.name = username;
+				newUser.password = password;
+				users.push(newUser);
+				console.log(users.length);
+			};
+		}]);
+
+		app.service('myservice', function() {
+      		this.loggedUser= {
+				name: "none",
+				passowrd: "none",
+				courses: []
+			};
+    	});
 
 	})();
 </script>

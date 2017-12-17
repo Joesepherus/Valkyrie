@@ -101,3 +101,140 @@ textarea {
 img {
   max-width: 100%;
 }
+
+img.postImg{
+  max-width: 800px;
+  max-height: 800px;
+  margin-top: 30px;
+}
+
+.design {
+  color: #fff;
+  text-align: right;
+}
+
+.design a {
+  color: #fff;
+}
+
+.copyright {
+  color: #fff;
+  font-size: 15px;
+  vertical-align: middle;
+padding-top: 10px;
+}
+
+.footer-bottom {
+  background-color: #2C3E50 /*#048e16*/;
+  min-height: 20px;
+  width: 100%;
+  border-top: 2px solid #DDDDDD;
+  position: fixed;
+  bottom: 0;
+}
+
+/*
+    Multicoloured Hover Variations
+*/
+ 
+#social-fb:hover {
+  color: #3B5998;
+}
+#social-tw:hover {
+  color: #4099FF;
+}
+#social-gp:hover {
+  color: #d34836;
+}
+#social-em:hover {
+  color: #f39c12;
+}
+#social-gh:hover {
+  color: #545454;
+}
+
+.modal {
+  text-align: center;
+  z-index: 9999999999;
+}
+
+@media screen and (min-width: 768px) { 
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog {
+  	display: inline-block;
+  	text-align: left;
+	vertical-align: middle;
+	width: 720px
+}
+
+.modal-body {
+	padding: 50px;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+vertical-align: middle;
+width: 720px
+}
+
+.modal-body {
+	padding: 50px;
+}
+
+.newYourPlaylistForm {
+	margin-top: 50px;
+}
+
+.emailModalForm {
+	margin-top: 20px!important;
+	margin-bottom: 20px!important;
+}
+
+.whatKindOfPlaylistPara {
+	font-size: 15px;
+	color: #3c3c3c!important;	
+	font-family: "Gotham-light";
+	letter-spacing: 1px;
+	padding-left: 7px;							
+}
+
+button.submitModalButton {
+	margin-top: -40px;
+}
+
+button.wantMusic {
+  background: red; /* For browsers that do not support gradients */	
+ background: -webkit-linear-gradient(left, #ea5700 , #f17700); /* For Safari 5.1 to 6.0 */
+   background: -o-linear-gradient(right, #ea5700 , #f17700); /* For Opera 11.1 to 12.0 */
+   background: -moz-linear-gradient(right, #ea5700 , #f17700); /* For Firefox 3.6 to 15 */
+   background: linear-gradient(to right, #ea5700 , #f17700); /* Standard */
+ color: white;
+ font-family: "Gotham-bold";
+ letter-spacing: 1px;
+ font-size: 15px;
+ margin-top:20px;
+}
+
+#hiddenRegistered, #hiddenInUse, #hiddenWrong, #hiddenLoggedIn {
+  display: none;
+}
+
+p.hiddenParagraphRed {
+  color: red;
+}
+
+p.hiddenParagraphGreen {
+  color: lightgreen;
+}
+
+.submitButton {
+  margin-top: 10px;
+}
