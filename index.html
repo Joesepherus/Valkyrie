@@ -29,10 +29,10 @@
 						<nav role='navigation' class="push-right">
 							<ul>
 								<li>
-									<a href="#" ng-click="course.selectTab('course')">See All Posts</a>
+									<a href="#" ng-click="course.selectTab('course')">See All Courses</a>
 								</li> //
 								<li>
-									<a href="#" ng-click="course.selectTab('new')">Add New Post</a>
+									<a href="#" ng-click="course.selectTab('new')">Add New Course</a>
 								</li>
 							</ul>
 						</nav>
@@ -95,7 +95,7 @@
 						</div>
 					</div>
 					<div class="post" ng-show="course.isSelected('new')">
-						<h2>Add New Post</h2>
+						<h2>Add New Course</h2>
 
 						<form name="postForm" ng-submit=" course.addPost()">
 							<h4>Title</h4>
@@ -228,7 +228,6 @@
 				contentType: "application/json",
 				mimeType: "application/json"
 			}).then(function (response) {
-				console.log(response, 'res');
 				course.posts = response.data;
 			}, function (error) {
 				console.log(error, 'can not get data.');
@@ -247,9 +246,7 @@
 			};
 
 			course.isSelectedFlag = function (checkFlag, post) {
-				//console.log(checkFlag + " " + post.title);
 				for (var i = 0; i < myservice.loggedUser.courses.length; i++) {
-					console.log(myservice.loggedUser.courses[i]);
 					if(myservice.loggedUser.courses[i] === post)
 						return 1;
 				}
@@ -258,8 +255,6 @@
 
 			course.selectTab = function (setTab) {
 				course.tab = setTab;
-				console.log(course.tab)
-			console.log("DICK " + myservice.loggedUser.name);
 			};
 
 			course.isSelected = function (checkTab) {
@@ -306,14 +301,12 @@
 				courses: []
 			},
 			{
-				name: "Tomas",
-				password: "kovacik",
+				name: "test",
+				password: "test",
 				courses: []
 			}];
 
 			user.test = function () {
-				console.log(users.length);
-				
 				for (var i = 0; i < users.length; i++) {
 					console.log(users[i].name, users[i].password);
 				}
@@ -323,10 +316,8 @@
 				var x = document.getElementById("hiddenWrong");
 				var y = document.getElementById("hiddenLoggedIn");
 				for (var i = 0; i < users.length; i++) {
-					console.log(users[i].name, users[i].password);
 					if(users[i].name === username && users[i].password === password){
 						myservice.loggedUser = users[i];
-						console.log("JUPIIII");
 						x.style.display = "none";
 						y.style.display = "block";
 						return 0;
@@ -361,7 +352,6 @@
 				newUser.name = username;
 				newUser.password = password;
 				users.push(newUser);
-				console.log(users.length);
 			};
 		}]);
 
